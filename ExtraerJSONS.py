@@ -63,44 +63,23 @@ def aplicar_tags_imagen(tags,archivo_imagen):
     with open(archivo_imagen, 'wb') as image_file:
         image_file.write(my_image.get_file())     
 
-def procesarJSONSyAplicaralasImagenes():
-
-    utilidades_dir = "."    
-    subcarpeta_google_fotos = "/Takeout/Google Fotos"
-
-    jsons_dir = utilidades_dir + subcarpeta_google_fotos
-
-    subcarpeta = "/Vacaciones 09"
-    oneDriveImagenes = "C:/Users/artur/OneDrive/Imágenes"
-
-    # for archivo in os.listdir(jsons_dir + subcarpeta):
-    #         if archivo.lower().endswith('.json'):
-                
-    #             try:
-    #                 archivo_jpg = oneDriveImagenes + subcarpeta + "/" + archivo.replace(".json","")
-    #                 archivo_json = carpeta_backup + subcarpeta + "/" + archivo
-    #                 cargar_json(archivo_json,archivo_jpg)
-    #             except Exception as e:
-    #                 print(f"Error en: {archivo} error: {e}" )
-    #                 logging.error(f"Error en: {archivo} error: {e}")
+def procesarJSONSyAplicaralasImagenes(jsons_dir =".",imagenes_dir = "."):
 
     for root, dirs, files in os.walk(jsons_dir):
         for file in files:
-            ruta_relativa_json = os.path.join(root, file)
 
-            print(f"JSON encontrado: {ruta_relativa_json}")
-        
-            tags = cargar_takeout_json(ruta_relativa_json)
+            archivo_json = os.path.join(root, file)
+            tags = cargar_takeout_json(archivo_json)
             TITLE_TAG = "title"
 
             if TITLE_TAG in tags:
-                dir_imagen = oneDriveImagenes + (root.replace(utilidades_dir + subcarpeta_google_fotos,""))
+                dir_imagen = imagenes_dir + (root.replace(jsons_dir,""))
                 ruta_imagen = os.path.join(dir_imagen,tags[TITLE_TAG])
                 
                 try:
                     aplicar_tags_imagen(tags,ruta_imagen)
-                except Exception as e:
-                    logging.error(f"Problema en: {ruta_imagen} problema: {e}")
+                except Exception:
+                    logging.error(f"Problema cob {ruta_imagen} y el json {archivo_json}")
             
 
 
@@ -109,20 +88,22 @@ if __name__ == "__main__":
     logging.basicConfig(filename='errores.log',
                     level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S')
+                    datefmt='%Y-%m-%d %H:%M:%S',
+                    encoding='utf-8')
 
     logging.info("--- TERMINA EJECUCIÓN ---");
 
-    one_drive_dir = Path("C:/Users/artur/OneDrive")
-    utilidades_dir = Path("D:/")
-    
-    archivos_zip = listar_archivos_zip(one_drive_dir.joinpath("Google Fotos Backup"))
+    imagenes_dir = "C:/Users/artur/OneDrive/Imágenes"
+    utilidades_dir = "C:/Users/artur/Desktop/Utilidades"
+    subcarpeta_google_fotos = utilidades_dir + "/Takeout/Google Fotos"
+
+    procesarJSONSyAplicaralasImagenes(subcarpeta_google_fotos,imagenes_dir)
 
     
-    for archivo_zip in archivos_zip:
-        logging.info("Procesando ZIP: " + archivo_zip)
-        with zipfile.ZipFile(archivo_zip, 'r') as zip_ref:
-            zip_ref.extractall(utilidades_dir)
+
+    
+    
+    
 
         
     
