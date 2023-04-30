@@ -7,6 +7,9 @@ import logging
 from pathlib import Path
 from exif import Image, DATETIME_STR_FORMAT
 from datetime import datetime
+import time
+import pywintypes
+import win32file
 
 def listar_archivos_zip(carpeta):
     archivos_zip = []
@@ -23,34 +26,37 @@ def crear_ficheros_json_del_zip(archivo_zip, rel_path = "."):
                 path.parent.mkdir(parents=True, exist_ok=True)
                 zip_ref.extract(nombre_archivo, rel_path)
 
-def cargar_json(archivo_json,imagen):
-    with open(archivo_json, 'r', encoding='utf-8') as file:
-        data = json.load(file)
-        timestamp = int(data['photoTakenTime']['timestamp'])
-        
-        
-        image_file = None
-        with open(imagen, 'rb') as image_file:
-            my_image = Image(image_file)
-            
-            datetime_original = datetime.fromtimestamp(timestamp)
-            my_image.datetime_original = datetime_original.strftime(DATETIME_STR_FORMAT)
-            
-            with open(imagen, 'wb') as image_file:
-                image_file.write(my_image.get_file())
-
 def cargar_takeout_json(archivo_json):
+
+    PHOTO_TAKEN_TIME_TAG = "photoTakenTime"
+    TIMESTAMP_TAG = "timestamp"
+    TITLE_TAG = "title"
+    GEO_DATA_EXIF_TAG = "geoDataExif"
+    LATITUDE_TAG = "latitude"
+    LONGITUDE_TAG = "longitude"
+    ALTITUDE_TAG = "altitude"
+
     with open(archivo_json, 'r', encoding='utf-8') as file:
         tags = {}
+        data = {}
 
         try:
             data = json.load(file)
-            tags["timestamp"] = int(data['photoTakenTime']['timestamp'])
-            tags["title"] = data['title']
         except Exception as e:
             logging.error(f"Error procesando {archivo_json} la excepción es: {e}")
         
-        return tags
+        if PHOTO_TAKEN_TIME_TAG in data:
+            tags[TIMESTAMP_TAG] = int(data[PHOTO_TAKEN_TIME_TAG][TIMESTAMP_TAG])
+        
+        if TITLE_TAG in data:
+            tags[TITLE_TAG] = data[TITLE_TAG]
+        
+        if GEO_DATA_EXIF_TAG in data:
+            tags[LATITUDE_TAG] = data[GEO_DATA_EXIF_TAG][LATITUDE_TAG]
+            tags[LONGITUDE_TAG] = data[GEO_DATA_EXIF_TAG][LONGITUDE_TAG]
+            tags[ALTITUDE_TAG] = data[GEO_DATA_EXIF_TAG][ALTITUDE_TAG]
+
+    return tags
 
 def aplicar_tags_imagen(tags,archivo_imagen):
 
@@ -62,6 +68,30 @@ def aplicar_tags_imagen(tags,archivo_imagen):
 
     with open(archivo_imagen, 'wb') as image_file:
         image_file.write(my_image.get_file())     
+
+def modificarAtributosDeCreacionModificacionYAccesoWin32(ruta_archivo,fecha_en_segundos):
+
+    os.utime(ruta_archivo, (fecha_en_segundos, fecha_en_segundos))
+
+    # Windows Stuff
+    fecha_gmtime = time.gmtime(fecha_en_segundos)
+    nueva_fecha = pywintypes.Time(fecha_gmtime)
+
+    handle = win32file.CreateFile(
+        ruta_archivo,
+        win32file.FILE_GENERIC_WRITE,
+        0,
+        None,
+        win32file.OPEN_EXISTING,
+        0,
+        None,
+    )
+
+    descriptor_archivo = handle.handle
+
+    win32file.SetFileTime(descriptor_archivo, nueva_fecha, None, None)
+    handle.Close()
+
 
 def procesarJSONSyAplicaralasImagenes(jsons_dir =".",imagenes_dir = "."):
 
@@ -82,7 +112,6 @@ def procesarJSONSyAplicaralasImagenes(jsons_dir =".",imagenes_dir = "."):
                     logging.error(f"Problema cob {ruta_imagen} y el json {archivo_json}")
             
 
-
 if __name__ == "__main__":
 
     logging.basicConfig(filename='errores.log',
@@ -91,21 +120,23 @@ if __name__ == "__main__":
                     datefmt='%Y-%m-%d %H:%M:%S',
                     encoding='utf-8')
 
-    logging.info("--- TERMINA EJECUCIÓN ---");
+    logging.info("--- INICIA EJECUCIÓN ---");
 
     imagenes_dir = "C:/Users/artur/OneDrive/Imágenes"
     utilidades_dir = "C:/Users/artur/Desktop/Utilidades"
     subcarpeta_google_fotos = utilidades_dir + "/Takeout/Google Fotos"
 
-    procesarJSONSyAplicaralasImagenes(subcarpeta_google_fotos,imagenes_dir)
+    ruta_rel_imagen = "/Photos from 2015/IMG_20150705_105702323.jpg"
 
-    
+    #procesarJSONSyAplicaralasImagenes(subcarpeta_google_fotos,imagenes_dir)
 
-    
-    
-    
+    json_prueba = subcarpeta_google_fotos + ruta_rel_imagen + ".json";
+    imagen_prueba = imagenes_dir + ruta_rel_imagen;
 
-        
-    
+    tags = cargar_takeout_json(json_prueba)
+
+    modificarAtributosDeCreacionModificacionYAccesoWin32(imagen_prueba,tags["timestamp"])
+
+
     logging.info("--- TERMINA EJECUCIÓN ---");
                     
