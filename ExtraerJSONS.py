@@ -8,8 +8,12 @@ from pathlib import Path
 from exif import Image, DATETIME_STR_FORMAT
 from datetime import datetime
 import time
+import subprocess
 import pywintypes
 import win32file
+
+from strings_tags import ALTITUDE_TAG,GEO_DATA_EXIF_TAG,LATITUDE_TAG,LONGITUDE_TAG,PHOTO_TAKEN_TIME_TAG
+from strings_tags import TIMESTAMP_TAG,TITLE_TAG
 
 def listar_archivos_zip(carpeta):
     archivos_zip = []
@@ -27,14 +31,6 @@ def crear_ficheros_json_del_zip(archivo_zip, rel_path = "."):
                 zip_ref.extract(nombre_archivo, rel_path)
 
 def cargar_takeout_json(archivo_json):
-
-    PHOTO_TAKEN_TIME_TAG = "photoTakenTime"
-    TIMESTAMP_TAG = "timestamp"
-    TITLE_TAG = "title"
-    GEO_DATA_EXIF_TAG = "geoDataExif"
-    LATITUDE_TAG = "latitude"
-    LONGITUDE_TAG = "longitude"
-    ALTITUDE_TAG = "altitude"
 
     with open(archivo_json, 'r', encoding='utf-8') as file:
         tags = {}
@@ -92,6 +88,37 @@ def modificarAtributosDeCreacionModificacionYAccesoWin32(ruta_archivo,fecha_en_s
     win32file.SetFileTime(descriptor_archivo, nueva_fecha, None, None)
     handle.Close()
 
+def eliminar_tags_image(archivo_imagen):
+
+    with open(archivo_imagen, 'rb') as image_file:
+        my_image = Image(image_file)
+    
+    my_image.delete("datetime_original")
+
+    with open(archivo_imagen, 'wb') as image_file:
+        image_file.write(my_image.get_file()) 
+
+
+def cambiar_fecha_exiftool(ruta_archivo, fecha):
+    fecha_formato_exif = fecha.strftime('%Y:%m:%d %H:%M:%S')
+
+    try:
+        subprocess.run(
+            [
+                "exiftool",
+                "-DateTimeOriginal=" + fecha_formato_exif,
+                "-CreateDate=" + fecha_formato_exif,
+                "-ModifyDate=" + fecha_formato_exif,
+                "-overwrite_original",
+                ruta_archivo,
+            ],
+            check=True,
+        )
+    except subprocess.CalledProcessError as e:
+        print(f"Error al cambiar la fecha con exiftool: {e}")
+
+
+
 
 def procesarJSONSyAplicaralasImagenes(jsons_dir =".",imagenes_dir = "."):
 
@@ -126,17 +153,26 @@ if __name__ == "__main__":
     utilidades_dir = "C:/Users/artur/Desktop/Utilidades"
     subcarpeta_google_fotos = utilidades_dir + "/Takeout/Google Fotos"
 
-    ruta_rel_imagen = "/Photos from 2015/IMG_20150705_105702323.jpg"
+    fotos_2015 = "/Japón 2015"
+
+    ruta_rel_imagen = fotos_2015 + "/IMG_20150702_104733262.jpg"
 
     #procesarJSONSyAplicaralasImagenes(subcarpeta_google_fotos,imagenes_dir)
 
     json_prueba = subcarpeta_google_fotos + ruta_rel_imagen + ".json";
     imagen_prueba = imagenes_dir + ruta_rel_imagen;
 
-    tags = cargar_takeout_json(json_prueba)
+    for f in os.listdir(imagenes_dir + fotos_2015):
+        f_lower = imagenes_dir + fotos_2015 + "/" + f.lower()
+        if f_lower.endswith(".jpg") or f_lower.endswith(".jpeg"):
+            imagen_prueba = f_lower
+            json_prueba = f_lower + ".json"
 
-    modificarAtributosDeCreacionModificacionYAccesoWin32(imagen_prueba,tags["timestamp"])
-
+            if (Path(json_prueba).exists()):
+                eliminar_tags_image(f_lower)
+                tags = cargar_takeout_json(json_prueba)
+                modificarAtributosDeCreacionModificacionYAccesoWin32(imagen_prueba,tags["timestamp"])
+                cambiar_fecha_exiftool(imagen_prueba,datetime.fromtimestamp(tags["timestamp"]))
 
     logging.info("--- TERMINA EJECUCIÓN ---");
                     
