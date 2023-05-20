@@ -12,8 +12,8 @@ import subprocess
 import pywintypes
 import win32file
 
-from strings_tags import ALTITUDE_TAG,GEO_DATA_EXIF_TAG,LATITUDE_TAG,LONGITUDE_TAG,PHOTO_TAKEN_TIME_TAG
-from strings_tags import TIMESTAMP_TAG,TITLE_TAG
+from strings_tags import ALTITUDE_TAG,GEO_DATA_EXIF_TAG,LATITUDE_TAG,LONGITUDE_TAG
+from strings_tags import PHOTO_TAKEN_TIME_TAG,TIMESTAMP_TAG,TITLE_TAG
 
 def listar_archivos_zip(carpeta):
     archivos_zip = []
