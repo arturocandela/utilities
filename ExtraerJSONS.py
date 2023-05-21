@@ -12,23 +12,12 @@ import subprocess
 import pywintypes
 import win32file
 
+from zip_utils import listar_archivos_zip,crear_ficheros_json_del_zip
+
 from strings_tags import ALTITUDE_TAG,GEO_DATA_EXIF_TAG,LATITUDE_TAG,LONGITUDE_TAG
 from strings_tags import PHOTO_TAKEN_TIME_TAG,TIMESTAMP_TAG,TITLE_TAG
 
-def listar_archivos_zip(carpeta):
-    archivos_zip = []
-    for archivo in os.listdir(carpeta):
-        if archivo.lower().endswith('.zip'):
-            archivos_zip.append(os.path.join(carpeta, archivo))
-    return archivos_zip
 
-def crear_ficheros_json_del_zip(archivo_zip, rel_path = "."):
-    with zipfile.ZipFile(archivo_zip, 'r') as zip_ref:
-        for nombre_archivo in zip_ref.namelist():
-            if nombre_archivo.lower().endswith('.json'):
-                path = Path(rel_path).joinpath(nombre_archivo)
-                path.parent.mkdir(parents=True, exist_ok=True)
-                zip_ref.extract(nombre_archivo, rel_path)
 
 def cargar_takeout_json(archivo_json):
 
