@@ -98,7 +98,6 @@ def eliminar_tags_image(archivo_imagen):
     with open(archivo_imagen, 'wb') as image_file:
         image_file.write(my_image.get_file()) 
 
-
 def cambiar_fecha_exiftool(ruta_archivo, fecha):
     fecha_formato_exif = fecha.strftime('%Y:%m:%d %H:%M:%S')
 
@@ -116,9 +115,6 @@ def cambiar_fecha_exiftool(ruta_archivo, fecha):
         )
     except subprocess.CalledProcessError as e:
         print(f"Error al cambiar la fecha con exiftool: {e}")
-
-
-
 
 def procesarJSONSyAplicaralasImagenes(jsons_dir =".",imagenes_dir = "."):
 
@@ -138,7 +134,6 @@ def procesarJSONSyAplicaralasImagenes(jsons_dir =".",imagenes_dir = "."):
                 except Exception:
                     logging.error(f"Problema cob {ruta_imagen} y el json {archivo_json}")
             
-
 if __name__ == "__main__":
 
     logging.basicConfig(filename='errores.log',
