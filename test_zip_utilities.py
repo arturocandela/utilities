@@ -10,7 +10,6 @@ class TestListarArchivosZip(unittest.TestCase):
         expected = ["test_helper/test_zip_utilities\\file1.zip","test_helper/test_zip_utilities\\file4.ZIP"]
         target = listar_archivos_zip("test_helper/test_zip_utilities")
 
-
         self.assertEquals(expected,target)
     
     def test_crear_ficheros_json_del_zip(self):
