@@ -1,0 +1,4 @@
+exif
+pywintypes
+win32file
+unittest 
