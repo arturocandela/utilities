@@ -12,7 +12,6 @@ namespace GoogleTakeoutJSONParserTest
         [Fact]
         public void Test1()
         {
-            GoogleTakeoutJSONParser parser = new GoogleTakeoutJSONParser();
             throw new XunitException("Not Implemented");
         }
     }

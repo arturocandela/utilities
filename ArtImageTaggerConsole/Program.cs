@@ -12,7 +12,7 @@ namespace ArtImageTaggerConsole  {
     class Program {
     static void Main(string[] args) {
 
-        string directoryPath = ".";
+        string directoryPath = @".";
         
         if (args.Length == 0) {
             Console.WriteLine("Usando ruta por defecto: " + directoryPath);
@@ -31,9 +31,46 @@ namespace ArtImageTaggerConsole  {
         var files = Directory.GetFiles(directoryPath, "*.*", SearchOption.AllDirectories)
                              .Where(file => allowedExtensions.Any(file.ToLower().EndsWith));
 
+        string pathToTakeout = @"C:\Users\artur\Desktop\Utilidades\Takeout\Google Fotos\";
+
+
+
+
         foreach (var file in files)
         {
-            Console.WriteLine(file);
+           string extension = Path.GetExtension(file).ToLower();
+
+           string relativePath = Path.GetRelativePath(directoryPath, file);
+            string takeout = Path.Combine(pathToTakeout, relativePath);
+            takeout+= ".json";
+
+
+           switch(extension){
+            
+            case ".jpg":
+            case ".jpeg":
+                Dictionary<string,object>? json = null;
+                
+                try {
+                    json = GoogleTakeoutJSONParser.GoogleTakeoutJSONParser.getJSON(takeout);
+                } catch (Exception) {
+                    
+                }
+
+                if (json != null) {
+                    Console.WriteLine(file + " - HAS TAKEOUT");
+                } else {
+                    Console.WriteLine(file);
+                }
+                
+                break;
+            default:
+                Console.WriteLine("No se reconoce la extensión: " + extension);
+                break;
+
+           }
+            
+
         }
 
 
