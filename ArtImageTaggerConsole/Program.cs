@@ -1,2 +1,24 @@
 ﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+
+
+
+
+namespace ArtImageTaggerConsole  {
+
+    using GoogleTakeoutJSONParser;
+
+    class Program {
+    static void Main(string[] args) {
+        
+        GoogleTakeoutJSONParser parser = new GoogleTakeoutJSONParser();
+        
+        Console.WriteLine("Hello, World!");
+
+
+    }
+}
+
+}
+
+
+

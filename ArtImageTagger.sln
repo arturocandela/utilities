@@ -5,9 +5,9 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArtImageTaggerConsole", "ArtImageTaggerConsole\ArtImageTaggerConsole.csproj", "{6B9D745B-FF9B-4988-83B1-D36B6844A730}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleTakoutJSONParser", "GoogleTakoutJSONParser\GoogleTakoutJSONParser.csproj", "{392FF724-0BA7-4B25-9C61-ECD5C615091E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleTakeoutJSONParser", "GoogleTakeoutJSONParser\GoogleTakeoutJSONParser.csproj", "{392FF724-0BA7-4B25-9C61-ECD5C615091E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleTakoutJSONParserTest", "GoogleTakoutJSONParserTest\GoogleTakoutJSONParserTest.csproj", "{4EDAC6D5-13CC-42AA-9B22-88E47EC47E13}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleTakeoutJSONParserTest", "GoogleTakeoutJSONParserTest\GoogleTakeoutJSONParserTest.csproj", "{4EDAC6D5-13CC-42AA-9B22-88E47EC47E13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

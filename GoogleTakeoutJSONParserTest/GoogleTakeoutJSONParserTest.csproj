@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GoogleTakoutJSONParser\GoogleTakoutJSONParser.csproj" />
+    <ProjectReference Include="..\GoogleTakeoutJSONParser\GoogleTakeoutJSONParser.csproj" />
   </ItemGroup>
 
 </Project>
