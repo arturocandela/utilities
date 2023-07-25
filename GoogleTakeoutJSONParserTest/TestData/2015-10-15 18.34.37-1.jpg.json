@@ -1,0 +1,38 @@
+{
+  "title": "2015-10-15 18.34.37-1.jpg",
+  "description": "",
+  "imageViews": "3",
+  "creationTime": {
+    "timestamp": "1586969346",
+    "formatted": "15 abr 2020, 16:49:06 UTC"
+  },
+  "photoTakenTime": {
+    "timestamp": "1444926877",
+    "formatted": "15 oct 2015, 16:34:37 UTC"
+  },
+  "geoData": {
+    "latitude": 38.6974411,
+    "longitude": -0.48451269999999996,
+    "altitude": 0.0,
+    "latitudeSpan": 0.0,
+    "longitudeSpan": 0.0
+  },
+  "geoDataExif": {
+    "latitude": 38.6974411,
+    "longitude": -0.48451269999999996,
+    "altitude": 0.0,
+    "latitudeSpan": 0.0,
+    "longitudeSpan": 0.0
+  },
+  "url": "https://lh3.googleusercontent.com/Rs3Xy7sLny7-fJowk5lsZ1TbFb3kR1G7yrh5olR4su7eOv2L91i8gioG7ZPaamX43EFWY9gyvzVIuBp34uO6AtNwwB99lcyctcuD7kgi",
+  "googlePhotosOrigin": {
+    "webUpload": {
+      "computerUpload": {
+      }
+    }
+  },
+  "photoLastModifiedTime": {
+    "timestamp": "1648155375",
+    "formatted": "24 mar 2022, 20:56:15 UTC"
+  }
+}
