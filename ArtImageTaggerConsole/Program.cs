@@ -1,13 +1,13 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 
-
-
 namespace ArtImageTaggerConsole  {
 
     using System;
     using System.IO;
     using System.Linq;
+
+    using GoogleTakeoutJSONParser;
 
     class Program {
     static void Main(string[] args) {
@@ -44,6 +44,7 @@ namespace ArtImageTaggerConsole  {
             string takeout = Path.Combine(pathToTakeout, relativePath);
             takeout+= ".json";
 
+            Console.ResetColor();
 
            switch(extension){
             
@@ -52,16 +53,18 @@ namespace ArtImageTaggerConsole  {
                 Dictionary<string,object>? json = null;
                 
                 try {
-                    json = GoogleTakeoutJSONParser.GoogleTakeoutJSONParser.getJSON(takeout);
-                } catch (Exception) {
                     
+                    GoogleTakeoutJSONParser jsonParser = new(takeout);
+                    //json = jsonParser.getJSON();
+                    
+                } catch (Exception) {
                 }
 
                 if (json != null) {
-                    Console.WriteLine(file + " - HAS TAKEOUT");
-                } else {
-                    Console.WriteLine(file);
+                    Console.BackgroundColor = ConsoleColor.Green;
                 }
+                
+                Console.WriteLine(file); 
                 
                 break;
             default:
