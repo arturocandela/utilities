@@ -32,7 +32,7 @@ namespace GoogleTakeoutJSONParser
             
             long unix_seconds = long.Parse(TakeoutData.PhotoTakenTime.Timestamp);
 
-            return DateTimeOffset.FromUnixTimeSeconds(unix_seconds).DateTime;
+            return DateTimeOffset.FromUnixTimeSeconds(unix_seconds).UtcDateTime;
            
            
             
